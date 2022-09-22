@@ -10,7 +10,7 @@ const numberOfCartItems = cartCtx.items.reduce((curNumber, item) => {
 }, 0)
 
   return (
-    <button className={classes.button} onClick={props}>
+    <button className={classes.button} onClick={props.onClick}>
       <span className={classes.icon}>
         <CartIcon />
       </span>
