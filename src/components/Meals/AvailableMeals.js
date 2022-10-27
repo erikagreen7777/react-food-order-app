@@ -5,6 +5,9 @@ import Card from "../UI/Card";
 
 const AvailableMeals = () => {
   const [meals, setMeals] = useState([]);
+  const [isLoading, setIsLoading] = useState(true)
+
+
   // fetch() is available out of the box: https://www.udemy.com/course/react-the-complete-guide-incl-redux/learn/lecture/25600062#overview
   useEffect(() => {
     // you can't use async functions with useEffect, so the workaround is to create a sub async function (fetchMeals) and then call it inside useEffect
@@ -24,11 +27,17 @@ const AvailableMeals = () => {
         });
       }
       setMeals(loadedMeals);
-      console.log("here " + loadedMeals)
+      setIsLoading(false)
     };
 
     fetchMeals();
   }, []);
+
+  if (isLoading) {
+    return <section className={classes.MealsLoading}>
+      <p>Loading...</p>
+    </section>
+  }
 
   const mealsList = meals.map((meal) => (
     <MealItem
