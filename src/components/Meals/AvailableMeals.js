@@ -5,8 +5,8 @@ import Card from "../UI/Card";
 
 const AvailableMeals = () => {
   const [meals, setMeals] = useState([]);
-  const [isLoading, setIsLoading] = useState(true)
-
+  const [isLoading, setIsLoading] = useState(true);
+  const [httpError, setHttpError] = useState();
 
   // fetch() is available out of the box: https://www.udemy.com/course/react-the-complete-guide-incl-redux/learn/lecture/25600062#overview
   useEffect(() => {
@@ -15,6 +15,11 @@ const AvailableMeals = () => {
       const response = await fetch(
         "https://react-project-487e1-default-rtdb.firebaseio.com/meals.json"
       );
+
+      if (!response.ok) {
+        throw new Error("Something went wrong!");
+      }
+
       const responseData = await response.json();
 
       const loadedMeals = [];
@@ -27,16 +32,31 @@ const AvailableMeals = () => {
         });
       }
       setMeals(loadedMeals);
-      setIsLoading(false)
+      setIsLoading(false);
     };
-
-    fetchMeals();
+    // how to handle an error inside a promise
+    fetchMeals()
+      .then()
+      .catch((error) => {
+        setIsLoading(false);
+        setHttpError(error.message);
+      });
   }, []);
 
+  if (httpError) {
+    return (
+      <section className={classes.MealsError}>
+        <p>{httpError}</p>
+      </section>
+    );
+  }
+
   if (isLoading) {
-    return <section className={classes.MealsLoading}>
-      <p>Loading...</p>
-    </section>
+    return (
+      <section className={classes.MealsLoading}>
+        <p>Loading...</p>
+      </section>
+    );
   }
 
   const mealsList = meals.map((meal) => (
